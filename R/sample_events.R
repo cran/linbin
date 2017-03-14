@@ -130,7 +130,7 @@ sample_events <- function(e, bins, ..., scaled.cols = NULL, col.names = NULL, dr
 #' Helper function for \code{\link{sampling_functions}}. Builds a function call in a enclosed environment with all fixed arguments and column indices so that the function can later be passed row subsets of an event table for sampling.
 #' 
 #' @param fun Function to use.
-#' @param bin.col Column defining the groupping of bins.
+#' @param bin.col Column defining the grouping of bins.
 #' @param data.cols Columns to each be passed as first argument to the function.
 #' @param arg.cols Columns to be passed as the second, third, ... arguments of the function.
 #' @param group.cols Columns to be used as factors.
@@ -139,7 +139,7 @@ sample_events <- function(e, bins, ..., scaled.cols = NULL, col.names = NULL, dr
 #' @keywords internal
 build_function_call <- function(fun, bin.col, data.cols, arg.cols = NULL, group.cols = NULL, arglist = NULL) {
   
-  # Helpter function
+  # Helper function
   ident <- function(x) {
     y <- as.integer(as.factor(x))
     z <- gsub(" ", "0", format(y, scientific = FALSE))
@@ -198,6 +198,9 @@ build_function_call <- function(fun, bin.col, data.cols, arg.cols = NULL, group.
       y <- stats::reshape(y[-groups], idvar = names(y[1]), timevar = names(y[length(y)]), direction = 'wide')
     }
     
+    # Sort by bin (id) column
+    y <- y[order(y[, 1]), ]
+    
     # Drop bin (id) column
     return(y[-1])
   }
@@ -212,7 +215,7 @@ build_function_call <- function(fun, bin.col, data.cols, arg.cols = NULL, group.
 #' 
 #' NOTE: Assumes bin assignments will be appended to the end of the event table.
 #' 
-#' @param col.names Names of columns, for converting column name indices to numeric colum indices.
+#' @param col.names Names of columns, for converting column name indices to numeric column indices.
 #' @param ... Lists of sampling function parameters (see \code{\link{sample_events}}).
 #' @return A list of functions.
 #' @keywords internal

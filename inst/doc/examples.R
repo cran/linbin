@@ -1,6 +1,6 @@
 ## ---- echo = FALSE-------------------------------------------------------
 knitr::opts_chunk$set(
-  collapse = TRUE, 
+  collapse = TRUE,
   comment = '>',
   fig.align = 'center',
   fig.show = 'hold'
@@ -22,12 +22,12 @@ bins.d <- seq_events(event_coverage(e.filled), length.out = 20, adaptive = TRUE)
 bins <- rbind(cbind(bins.a, g = 1), cbind(bins.b, g = 2), cbind(bins.c, g = 3), cbind(bins.d, g = 4))
 
 # Sample events at bins
-e.bins <- sample_events(e, bins, list(weighted.mean, "mean.width", "unit.length"), 
+e.bins <- sample_events(e, bins, list(weighted.mean, "mean.width", "unit.length"),
                         scaled.cols = "unit.length")
 
 # Plot binned data
-plot_events(e.bins, group.col = "g", data.cols = "mean.width", col = "grey", border = "#666666", 
-            main = c("(a) Flattened original data", "(b) Equal length bins", 
+plot_events(e.bins, group.col = "g", data.cols = "mean.width", col = "grey", border = "#666666",
+            main = c("(a) Flattened original data", "(b) Equal length bins",
                      "(c) Equal coverage bins", "(d) Variable length bins"),
             xlabs = "Distance upstream (km)", ylabs = "Wetted width (m)",
             dim = c(4, 1), ylim = c(0, 56), xpd = NA)
@@ -44,14 +44,14 @@ bins <- seq_events(event_range(e), by = bin.lengths / 1000) # km
 e.bins <- sample_events(e, bins, list(sum, "ONXX.*"), scaled.cols = "ONXX.*")
 
 # Plot binned data
-plot_events(e.bins, group.col = "group", data.cols = "ONXX.total", 
-            main = paste0("Bin length = ", prettyNum(bin.lengths, ","), " m"), 
+plot_events(e.bins, group.col = "group", data.cols = "ONXX.total",
+            main = paste0("Bin length = ", prettyNum(bin.lengths, ","), " m"),
             xlabs = "Distance upstream (km)", ylabs = "Trout abundance",
             dim = c(3, 3), byrow = TRUE, oma = c(3, 3, 2, 2))
 
 ## ---- fig.width = 6, fig.height = 6--------------------------------------
-plot_events(e.bins, group.col = "group", data.cols = "ONXX.[0-9]+", 
-            main = paste0("Bin length = ", prettyNum(bin.lengths, ","), " m"), 
+plot_events(e.bins, group.col = "group", data.cols = "ONXX.[0-9]+",
+            main = paste0("Bin length = ", prettyNum(bin.lengths, ","), " m"),
             xlabs = "Distance upstream (km)", ylabs = "Trout abundance",
             dim = c(3, 3), byrow = TRUE, oma = c(3, 3, 2, 2), col = heat.colors(3), border = NA)
 
@@ -74,9 +74,9 @@ bins = seq_events(event_range(e.net), length.out = 10)
 
 # Sample events at bins
 fields = c("IP_CHINOOK", "IP_COHO", "IP_STEELHD", "BeavHab", "DEPTH_M")
-e.bins.main = sample_events(e.main, bins, list(weighted.mean, fields, "LENGTH_M"), 
+e.bins.main = sample_events(e.main, bins, list(weighted.mean, fields, "LENGTH_M"),
                             scaled.cols = "LENGTH_M")
-e.bins.net = sample_events(e.net, bins, list(weighted.mean, fields, "LENGTH_M"), 
+e.bins.net = sample_events(e.net, bins, list(weighted.mean, fields, "LENGTH_M"),
                            scaled.cols = "LENGTH_M")
 e.bins = rbind(cbind(e.bins.main, group = 1), cbind(e.bins.net, group = 2))
 
@@ -104,14 +104,14 @@ e.origin.bins = sample_events(e.origin, bins, list(length, 'region', by = 'regio
 e.motion.bins$fish.1.norm = e.motion.bins$region.1 / e.origin.bins$region.1
 
 # Prepare weekly data labels
-bins[c("from.date", "to.date")] = lapply(bins[c("from", "to")], 
+bins[c("from.date", "to.date")] = lapply(bins[c("from", "to")],
                                          as.POSIXct, origin = '1970-01-01', tz = "US/Alaska")
 week.ticks = seq(trunc(min(bins$from.date), "day"), trunc(max(bins$from.date), "day"), by = "week")
 week.labels = format(week.ticks, '%b-%d')
 
 # Plot binned data
-plot_events(e.motion.bins, data.cols = "fish.1.norm", yticks = c(0, 1, 2), 
-            col = par("fg"), ylim = c(0, 2), plot.grid = TRUE, xpd = FALSE, 
+plot_events(e.motion.bins, data.cols = "fish.1.norm", yticks = c(0, 1, 2),
+            col = par("fg"), ylim = c(0, 2), plot.grid = TRUE, xpd = FALSE,
             main = NA, xlabs = "Date (2008)", ylabs = "Relative abundance",
             xticks = week.ticks, xtick.labels = week.labels, oma = c(3, 2, 1, 2))
 

@@ -44,7 +44,7 @@ NULL
 #' }
 #'
 #' @format A data frame with 249 rows and 33 variables.
-#' @source Brenkman, S. J., J. J. Duda, C. E. Torgersen, E. Z. Welty, G. R. Pess, R. Peters, and M. L. McHenry. 2012. A riverscape perspective of Pacific salmonids and aquatic habitats prior to large-scale dam removal in the Elwha River, Washington, USA. Fisheries Management and Ecology 19:36-53. DOI: \href{http://dx.doi.org/10.1111/j.1365-2400.2011.00815.x}{10.1111/j.1365-2400.2011.00815.x}
+#' @source Brenkman, S. J., J. J. Duda, C. E. Torgersen, E. Z. Welty, G. R. Pess, R. Peters, and M. L. McHenry. 2012. A riverscape perspective of Pacific salmonids and aquatic habitats prior to large-scale dam removal in the Elwha River, Washington, USA. Fisheries Management and Ecology 19:36-53. DOI: \doi{10.1111/j.1365-2400.2011.00815.x}
 #' @name elwha
 NULL
 
@@ -85,7 +85,7 @@ NULL
 
 #' Dungeness River (NetMap)
 #'
-#' NetMap (\href{http://www.terrainworks.com/}{terrainworks.com}) output for the entire fluvial network of the Dungeness River (Washington, USA). NetMap employs digital elevation models to generate detailed river networks and compute biophysical variables for spatially continuous hydrologic units throughout the networks.
+#' NetMap (\href{https://terrainworks.com}{terrainworks.com}) output for the entire fluvial network of the Dungeness River (Washington, USA). NetMap employs digital elevation models to generate detailed river networks and compute biophysical variables for spatially continuous hydrologic units throughout the networks.
 #'
 #' \itemize{
 #'   \item CHAN_ID - channel identifier (1 = mainstem, all others are tributaries)
@@ -95,7 +95,7 @@ NULL
 #' }
 #'
 #' @format A data frame with 16,616 rows and 47 variables.
-#' @source \url{http://www.terrainworks.com/netmap-demo-tools-download}
+#' @source \url{https://terrainworks.com}
 #' @name netmap
 NULL
 
@@ -105,11 +105,11 @@ NULL
 #'
 #' \itemize{
 #'   \item from, to - start and end times as seconds since 1970-01-01 UTC (POSIXct)
-#'   \item fish.id - unique identifer for each fish
+#'   \item fish.id - unique identifier for each fish
 #'   \item region - stream region (1 = 0 - 930 m, a cold downstream region with abundant and spawning sockeye salmon; 2 = 930 - 1360 m, a cold middle region with few if any sockeye salmon; 3 = > 1360 m, a warm upstream region where sockeye salmon were absent)
 #' }
 #'
 #' @format Two data frames \code{motion} and \code{origin} with 1,140 rows and 149 rows of 4 variables, respectively.
-#' @source Armstrong, J. B., D. E. Schindler, C. P. Ruff, G. T. Brooks, K. E. Bentley, and C. E. Torgersen. 2013. Diel horizontal migration in streams: juvenile fish exploit spatial heterogeneity in thermal and trophic resources. Ecology 94:2066-2075. DOI: \href{https://dx.doi.org/10.1890/12-1200.1}{10.1890/12-1200.1}
+#' @source Armstrong, J. B., D. E. Schindler, C. P. Ruff, G. T. Brooks, K. E. Bentley, and C. E. Torgersen. 2013. Diel horizontal migration in streams: juvenile fish exploit spatial heterogeneity in thermal and trophic resources. Ecology 94:2066-2075. DOI: \doi{10.1890/12-1200.1}
 #' @name fishmotion
 NULL

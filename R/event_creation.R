@@ -14,14 +14,14 @@
 #' events(1, 5)
 #' events(1:5)
 #' events(c(0, 15, 25), c(10, 30, 35), x = 1, y = c('a', 'b', 'c'))
-events <- function(from = numeric(), to = numeric(), ...) {
+events <- function(from = numeric(), to = NULL, ...) {
   # Attempt to coerce if only one non-empty argument
   if (!length(to) && !length(list(...)) && length(from)) {
-    return(as_events(from))
+    as_events(from)
+  } else {
+    # Otherwise, collect into data frame
+    as_events(data.frame(from, to, ...))
   }
-  # Otherwise, collect into data frame
-  x <- data.frame(from, to, ...)
-  return(as_events(x))
 }
 
 #' Coerce to an Event Table
@@ -29,7 +29,7 @@ events <- function(from = numeric(), to = numeric(), ...) {
 #' Attempts to coerce an object to an event table.
 #' 
 #' @param x Object to be coerced to an event table.
-#' @param from.col,to.col Names or indices of the columns in \code{x} containing the event endpoints. Values are swapped as needed to ensure that \code{to > or = from} on all rows.
+#' @param from.col,to.col Names or indices of the columns in \code{x} containing the event endpoints. Values are swapped as needed to ensure that \code{to > or = from} on all rows. If \code{NULL}, \code{to.col} defaults to \code{from.col + 1} (if column exists) or \code{from.col}.
 #' @param ... Additional arguments passed to or used by methods.
 #' @seealso \code{\link{events}} for creating event tables and \code{\link{read_events}} for reading files as event tables.
 #' @export
@@ -39,8 +39,8 @@ events <- function(from = numeric(), to = numeric(), ...) {
 #' as_events(cbind(1:5, 1:5), 1, 2)
 #' as_events(data.frame(x = 1, start = 1:5, stop = 1:5), "start", "stop")
 as_events <- function(x, ...) {
-  if (is.null(x)) {
-    return(data.frame(from = integer(), to = integer()))
+  if (length(x) == 0) {
+    data.frame(from = numeric(), to = numeric())
   } else {
     UseMethod("as_events")
   }
@@ -56,26 +56,45 @@ as_events.numeric <- function(x, ...) {
     if (any(need.flip)) {
       e[need.flip, c("from", "to")] <- e[need.flip, c("to", "from")]
     }
-    return(e)
+    e
   } else {
     # Interpret as single point event
-    return(data.frame(from = x, to = x))
+    data.frame(from = x, to = x)
   }
+}
+#' @describeIn as_events Coerces to numeric before dispatching.
+#' @export
+as_events.POSIXt <- function(x, ...) {
+  as_events(as.numeric(x), ...)
+}
+#' @describeIn as_events Coerces to numeric before dispatching.
+#' @export
+as_events.Date <- function(x, ...) {
+  as_events(as.numeric(x), ...)
 }
 #' @describeIn as_events Converts the matrix to a data frame, then calls the \code{data.frame} method.
 #' @export
-as_events.matrix <- function(x, from.col = 1, to.col = 2, ...) {
-  return(as_events(as.data.frame(x), from.col = from.col, to.col = to.col, ...))
+as_events.matrix <- function(x, from.col = 1, to.col = NULL, ...) {
+  as_events(as.data.frame(x), from.col = from.col, to.col = to.col, ...)
 }
 #' @describeIn as_events Renames \code{from.col} and \code{to.col} to "from" and "to" as needed. Since these column names must be unique, other columns cannot also be called "from" or "to".
 #' @export
-as_events.data.frame <- function(x, from.col = 1, to.col = 2, ...) {
+as_events.data.frame <- function(x, from.col = 1, to.col = NULL, ...) {
+  # Coerce to bare data.frame
+  x <- as.data.frame(x)
   # Ensure endpoint columns exist and are unique
   if (is.character(from.col)) {
     from.col <- which(names(x) %in% from.col)
   }
   if (is.character(to.col)) {
     to.col <- which(names(x) %in% to.col)
+  }
+  if (is.null(to.col)) {
+    to.col <- pmin(from.col + 1, ncol(x))
+  }
+  if (from.col == to.col) {
+    x[["to"]] <- x[[from.col]]
+    to.col <- ncol(x)
   }
   names(x)[c(from.col[1], to.col[1])] <- c("from", "to")
   occurrence <- lapply(rgrep_exact(c("from", "to"), names(x)), length)
@@ -108,7 +127,7 @@ as_events.data.frame <- function(x, from.col = 1, to.col = 2, ...) {
 #' @param file Name, \code{\link{connection}}, or \code{\link{url}} of the file to be read as an event table.
 #' @param from.col,to.col Names or indices of the columns containing event endpoints. Values are swapped as needed to ensure that \code{to > or = from} on all rows.
 #' @param header Logical value indicating whether the file contains column names as its first line. If \code{FALSE}, columns will be named "V" followed by the column number, unless \code{col.names} (a vector of optional column names) is provided as an additional argument.
-#' @param sep Character seperating values on each line of the file. If \code{sep = ""} (the default), the separator is 'white space' (that is, any combination of one or more spaces, tabs, newlines and carriage returns).
+#' @param sep Character separating values on each line of the file. If \code{sep = ""} (the default), the separator is 'white space' (that is, any combination of one or more spaces, tabs, newlines and carriage returns).
 #' @param ... Additional arguments, of the form \code{tag = value}, to be passed directly to \code{\link{read.table}} to control how the file is read.
 #' @seealso \code{\link{read.table}}.
 #' @seealso \code{\link{events}} and \code{\link{as_events}} for creating event tables from existing objects.
